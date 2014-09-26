@@ -1,0 +1,15 @@
+# use module
+use XML::Simple;
+use Data::Dumper;
+
+# create object
+$xml = new XML::Simple (KeyAttr=>[]);
+
+# read XML file and store to array
+$smap = $xml->XMLin("sitemap.xml");
+
+# iterate through that array, pull out the 'loc' element and print it
+foreach $e (@{$smap->{url}})
+{
+	print $e->{loc}, "\n";
+}
