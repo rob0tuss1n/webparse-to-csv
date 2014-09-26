@@ -1,15 +1,20 @@
 # use module
+use strict;
+use warnings;
 use XML::Simple;
 use Data::Dumper;
+use HTML::Parser;
+use Text::CSV;
 
 # create object
-$xml = new XML::Simple (KeyAttr=>[]);
+my $xml = new XML::Simple (KeyAttr=>[]);
 
 # read XML file and store to array
-$smap = $xml->XMLin("sitemap.xml");
+my $smap = $xml->XMLin("sitemap.xml");
 
 # iterate through that array, pull out the 'loc' element and print it
 foreach $e (@{$smap->{url}})
 {
-	print $e->{loc}, "\n";
+	my $p = new HTML::Parser;
+	$p->parse_file("$e->{loc}");
 }
