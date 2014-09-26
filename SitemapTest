@@ -1,5 +1,4 @@
 # use module
-use strict;
 use warnings;
 use XML::Simple;
 use Data::Dumper;
