@@ -2,7 +2,8 @@
 use warnings;
 use XML::Simple;
 use Data::Dumper;
-use HTML::Parser;
+use LWP::Simple;
+use HTML::TableExtract;
 use Text::CSV;
 
 # create object
@@ -12,8 +13,9 @@ my $xml = new XML::Simple (KeyAttr=>[]);
 my $smap = $xml->XMLin("sitemap.xml");
 
 # iterate through that array, pull out the 'loc' element and print it
-foreach $e (@{$smap->{url}})
+foreach my $e (@{$smap->{url}})
 {
-	my $p = new HTML::Parser;
-	$p->parse_file("$e->{loc}");
+	my $html = get '$e->{loc}';
+	my $te = new HTML::TableExtract();
+	$te->parse($html);
 }
