@@ -7,9 +7,15 @@ use HTML::TableExtract;
 use Text::CSV;
 
 # create object
+
 my $xml = new XML::Simple (KeyAttr=>[]);
 
 # read XML file and store to array
+my $sitemap = get("http://www.suns-usa.com/en/sitemap.xml");
+open ( SITEMAP, '>', 'sitemap.xml' ) or die $!;
+binmode SITEMAP;
+print SITEMAP $sitemap;
+close ( SITEMAP );
 my $smap = $xml->XMLin("sitemap.xml");
 
 # iterate through that array, pull out the 'loc' element and print it
