@@ -1,4 +1,5 @@
 # use module
+use strict;
 use warnings;
 use XML::Simple;
 use Data::Dumper;
@@ -13,15 +14,19 @@ my $xml = new XML::Simple (KeyAttr=>[]);
 # read XML file and store to array
 my $sitemap = get("http://www.suns-usa.com/en/sitemap.xml");
 open ( SITEMAP, '>', 'sitemap.xml' ) or die $!;
-binmode SITEMAP;
+binmode SITEMAP, ":encoding(UTF-8)";
 print SITEMAP $sitemap;
 close ( SITEMAP );
 my $smap = $xml->XMLin("sitemap.xml");
 
-# iterate through that array, pull out the 'loc' element and print it
+# iterate through that array, pull out the 'loc' element and do your stuff
 foreach my $e (@{$smap->{url}})
 {
 	my $html = get '$e->{loc}';
 	my $te = new HTML::TableExtract();
 	$te->parse($html);
+	my $csv = Text::CSV->new ( { binary => 1 } ) or die "Cannot use CSV: ".Text::CSV->error_diag ();
+	open ( CSV, '>>', 'output.csv' ) or die $!;
+	print CSV $te, "\n";
+	close ( CSV );
 }
