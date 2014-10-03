@@ -23,10 +23,15 @@ my $smap = $xml->XMLin("sitemap.xml");
 foreach my $e (@{$smap->{url}})
 {
 	my $html = get '$e->{loc}';
-	my $te = new HTML::TableExtract();
-	$te->parse($html);
+	my @te = 	(
+			new HTML::TableExtract( depth => 0, count => 0), 
+			new HTML::TableExtract( depth => 0, count => 1), 
+			new HTML::TableExtract( depth => 0, count => 2)
+			);
+	grep($_->parse($html), @te);
 	my $csv = Text::CSV->new ( { binary => 1 } ) or die "Cannot use CSV: ".Text::CSV->error_diag ();
 	open ( CSV, '>>', 'output.csv' ) or die $!;
-	print CSV $te, "\n";
+	local $" = ',';
+	print CSV "@te\n";
 	close ( CSV );
 }
